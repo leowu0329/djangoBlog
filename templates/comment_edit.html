@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="mb-0">編輯評論</h2>
+          </div>
+          <div class="card-body">
+            <form method="post">
+              {% csrf_token %}
+              {{ form|crispy }}
+              <div class="mt-3">
+                <button type="submit" class="btn btn-primary">更新評論</button>
+                <a href="{% url 'article_detail' object.article.pk %}" class="btn btn-secondary">取消</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .card {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+{% endblock %}

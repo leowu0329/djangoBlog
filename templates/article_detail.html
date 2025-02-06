@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ article.title }}
+{% endblock %}
+
+{% block content %}
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <!-- 返回按鈕 -->
+        <div class="mb-4">
+          <a href="{% url 'article_list' %}" class="btn btn-outline-primary"><i class="fas fa-arrow-left"></i> 返回文章列表</a>
+        </div>
+
+        <!-- 文章內容卡片 -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h1 class="card-title display-4 mb-3">{{ article.title }}</h1>
+            <div class="d-flex align-items-center text-muted mb-4">
+              <div class="author-info">
+                <i class="fas fa-user-circle"></i>
+                <span class="ms-1">{{ article.author }}</span>
+              </div>
+              <div class="mx-3">|</div>
+              <div class="date-info">
+                <i class="far fa-calendar-alt"></i>
+                <span class="ms-1">{{ article.date|date:'Y年m月d日 H:i' }}</span>
+              </div>
+            </div>
+
+            <div class="article-content mb-4">{{ article.body|linebreaks }}</div>
+
+            {% if user.is_authenticated and article.author == user %}
+              <div class="article-actions">
+                <a href="{% url 'article_edit' article.pk %}" class="btn btn-outline-primary"><i class="fas fa-edit"></i> 編輯文章</a>
+                <a href="{% url 'article_delete' article.pk %}" class="btn btn-outline-danger"><i class="fas fa-trash"></i> 刪除文章</a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- 評論區塊 -->
+        <div class="card shadow-sm">
+          <div class="card-header bg-light">
+            <h2 class="h5 mb-0">
+              <i class="far fa-comments"></i> 評論區
+              <span class="badge bg-secondary">{{ article.comment_set.count }}</span>
+            </h2>
+          </div>
+          <div class="card-body">
+            {% if user.is_authenticated %}
+              <form method="post" action="{% url 'comment_new' article.pk %}" class="mb-4">
+                {% csrf_token %}
+                <div class="form-group">
+                  <textarea name="comment" class="form-control" rows="3" placeholder="分享您的想法..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3"><i class="far fa-paper-plane"></i> 發表評論</button>
+              </form>
+            {% else %}
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 請<a href="{% url 'login' %}" class="alert-link">登入</a>後發表評論
+              </div>
+            {% endif %}
+
+            <div class="comments-list">
+              {% for comment in article.comment_set.all %}
+                <div class="comment-item {% if not forloop.last %}border-bottom{% endif %} py-3">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div class="comment-content">
+                      <p class="mb-1">{{ comment.comment }}</p>
+                      <small class="text-muted">
+                        <i class="fas fa-user"></i> {{ comment.author }} |
+                        <i class="far fa-clock"></i> {{ comment.created_at|date:'Y/m/d H:i' }}
+                      </small>
+                    </div>
+                    {% if user.is_authenticated and comment.author == user %}
+                      <div class="comment-actions">
+                        <a href="{% url 'comment_edit' comment.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                        <a href="{% url 'comment_delete' comment.pk %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></a>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              {% empty %}
+                <div class="text-center text-muted py-4">
+                  <i class="far fa-comment-dots fa-2x mb-2"></i>
+                  <p>還沒有評論，來分享您的想法吧！</p>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .article-content {
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+    
+    .comment-item {
+      transition: background-color 0.2s ease;
+    }
+    
+    .comment-item:hover {
+      background-color: rgba(0, 0, 0, 0.01);
+    }
+    
+    .comment-actions {
+      opacity: 0.5;
+      transition: opacity 0.2s ease;
+    }
+    
+    .comment-item:hover .comment-actions {
+      opacity: 1;
+    }
+    
+    .article-actions {
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .article-actions .btn {
+      margin-right: 0.5rem;
+    }
+    
+    .card {
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .form-control:focus {
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+    }
+    
+    @media (max-width: 768px) {
+      .display-4 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+{% endblock %}
