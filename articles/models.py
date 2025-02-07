@@ -19,16 +19,18 @@ class Article(models.Model):
         return reverse("article_detail", kwargs={"pk": self.pk})
 
 
-class Comment(models.Model):  # new
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+class Comment(models.Model):
+    article = models.ForeignKey("Article", on_delete=models.CASCADE)
     comment = models.CharField(max_length=140)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.comment
 
     def get_absolute_url(self):
-        return reverse("article_list")
+        return reverse("article_detail", kwargs={"pk": self.article.pk})

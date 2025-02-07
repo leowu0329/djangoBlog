@@ -1,15 +1,124 @@
-{% extends "base.html" %}
-{% load crispy_forms_tags %}
+{% extends 'base.html' %}
+{% load widget_tweaks %}
 
-{% block title %}Log In{% endblock title %}
+{% block title %}
+  登入
+{% endblock %}
 
 {% block content %}
-<h2>Log In</h2>
-<form method="post">{% csrf_token %}
-  {{ form|crispy }}
-  <button class="btn btn-success ms-2" type="submit">Log In</button>
-</form>
-<!-- new code here -->
-<p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
-<!-- end new code -->
-{% endblock content %}
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white text-center py-3">
+            <h1 class="h3 mb-0"><i class="fas fa-sign-in-alt"></i> 會員登入</h1>
+          </div>
+          <div class="card-body p-4">
+            {% if form.errors %}
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle"></i> 帳號或密碼錯誤，請重新輸入。
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+            {% endif %}
+
+            <form method="post">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="{{ form.username.id_for_label }}" class="form-label"><i class="fas fa-user"></i> 帳號</label>
+                {{ form.username|add_class:'form-control'|attr:'placeholder:請輸入帳號' }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.password.id_for_label }}" class="form-label"><i class="fas fa-lock"></i> 密碼</label>
+                {{ form.password|add_class:'form-control'|attr:'placeholder:請輸入密碼' }}
+              </div>
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> 登入</button>
+              </div>
+            </form>
+
+            <hr class="my-4" />
+
+            <div class="text-center">
+              <p class="mb-2">
+                <a href="{% url 'password_reset' %}" class="text-decoration-none"><i class="fas fa-key"></i> 忘記密碼？</a>
+              </p>
+              <p class="mb-0">
+                還沒有帳號？
+                <a href="{% url 'signup' %}" class="text-decoration-none"><i class="fas fa-user-plus"></i> 立即註冊</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .card {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    
+    .card-header {
+      border-bottom: none;
+    }
+    
+    .form-control {
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+    }
+    
+    .form-control:focus {
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+    }
+    
+    .btn {
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+    }
+    
+    .btn-primary {
+      background-color: #0d6efd;
+      border-color: #0d6efd;
+    }
+    
+    .btn-primary:hover {
+      background-color: #0b5ed7;
+      border-color: #0a58ca;
+    }
+    
+    hr {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .alert {
+      border-radius: 10px;
+    }
+    
+    /* 動畫效果 */
+    .card {
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        transform: translateY(-10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    /* 懸停效果 */
+    .btn:not(:disabled) {
+      transition: transform 0.2s ease;
+    }
+    
+    .btn:not(:disabled):hover {
+      transform: translateY(-2px);
+    }
+  </style>
+{% endblock %}
