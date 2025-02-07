@@ -133,14 +133,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.CustomUser"  # new
 
 LOGIN_REDIRECT_URL = "home"  # new
-LOGOUT_REDIRECT_URL = "article_list"
+# LOGOUT_REDIRECT_URL = "article_list"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"  # new
 CRISPY_TEMPLATE_PACK = "bootstrap5"  # new
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# 在開發環境中使用 console 後端
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST="smtp.gmail.com"
 EMAIL_PORT=587
-EMAIL_USER="ryowu0329@gmail.com"
-EMAIL_PASS= "ltmkhwqcgwoorryy"
+EMAIL_HOST_USER="ryowu0329@gmail.com"
+EMAIL_HOST_PASSWORD= "ltmkhwqcgwoorryy"
 EMAIL_USE_TLS=True  
 
