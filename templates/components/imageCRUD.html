@@ -1,0 +1,69 @@
+{% load cloudinary %}
+
+<div class="image-crud mb-4">
+  <!-- 圖片上傳 -->
+  {% if user.is_authenticated and article.author == user %}
+    <form action="{% url 'upload_image' article.pk %}" method="post" enctype="multipart/form-data" class="mb-3">
+      {% csrf_token %}
+      <div class="input-group">
+        <input type="file" name="image" class="form-control" accept="image/*" required />
+        <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> 上傳圖片</button>
+      </div>
+    </form>
+  {% endif %}
+
+  <!-- 圖片顯示區域 -->
+  <div class="image-gallery">
+    {% if images %}
+      <div class="row g-3">
+        {% for image in images %}
+          <div class="col-md-4">
+            <div class="card h-100">
+              <img src="{{ image.url }}" class="card-img-top" alt="Article image" data-bs-toggle="modal" data-bs-target="#imageModal{{ image.public_id }}" style="cursor: pointer; object-fit: cover; height: 200px;" />
+              {% if user.is_authenticated and article.author == user %}
+                <div class="card-body">
+                  <form action="{% url 'delete_image' article.pk image.public_id %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('確定要刪除這張圖片嗎？')"><i class="fas fa-trash"></i> 刪除</button>
+                  </form>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- 圖片放大 Modal -->
+          <div class="modal fade" id="imageModal{{ image.public_id }}" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">圖片預覽</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                  <img src="{{ image.url }}" class="img-fluid" alt="Article image" />
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center text-muted py-4">
+        <i class="fas fa-images fa-2x mb-2"></i>
+        <p>尚未上傳任何圖片</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .image-gallery .card {
+    transition: transform 0.2s;
+  }
+  .image-gallery .card:hover {
+    transform: translateY(-5px);
+  }
+  .modal-body img {
+    max-height: 80vh;
+  }
+</style>

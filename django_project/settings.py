@@ -136,3 +136,14 @@ EMAIL_USE_TLS=True
 DEFAULT_FROM_EMAIL=f"Django App Name {env('EMAIL_ADDRESS')}"
 ACCOUNT_EMAIL_SUBJECT_PREFIX=''
 
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+# Cloudinary 設定
+cloudinary.config(
+    cloud_name = env('CLOUDINARY_CLOUD_NAME'),
+    api_key = env('CLOUDINARY_API_KEY'),
+    api_secret = env('CLOUDINARY_API_SECRET'),
+    secure = True
+)
