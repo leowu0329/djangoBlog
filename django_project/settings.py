@@ -96,9 +96,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "zh-hant"
 
-TIME_ZONE = "America/New_York"  # new
+TIME_ZONE = "Asia/Taipei"  # new
 
 USE_I18N = True
 
